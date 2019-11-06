@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <!--加载资源文件-->
+    <context:property-placeholder location="classpath:db.properties"/>
+
+    <!--配置C3P0数据源-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="driverClass" value="${jdbc.driverClass}"/>
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
+        <property name="initialPoolSize" value="5"/>
+        <property name="maxPoolSize" value="10"/>
+    </bean>
+
+    <!--配置MyBatis SqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--指定MyBatis数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--指定MyBatis mapper映射文件位置-->
+        <property name="mapperLocations" value="classpath:StudentDAO.xml"/>
+        <!--指定MyBatis全局配置文件的位置-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    </bean>
+
+    <!--扫描MyBatis的mapper接口-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--指定数据源-->
+        <property name="basePackage" value="main.java.dao"/>
+    </bean>
+
+
+
+</beans>
